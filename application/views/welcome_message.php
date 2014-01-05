@@ -12,7 +12,7 @@
 			<p>¿Qué desea hacer?</p>
 			<ul>
 				<li><a href="<?=site_url('perfiles') ?>">Definir perfiles de cargo</a></li>
-				<li><a href="#">Definir preguntas y alternativas</a></li>
+				<li><a href="<?=site_url('preguntas') ?>">Definir preguntas y alternativas</a></li>
 				<li><a href="#">Aplicar la encuesta a un postulante</a></li>
 				<li><a href="#">Ver resultados de encuestas</a></li>
 			</ul>
