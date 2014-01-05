@@ -1,19 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-/**
- * CodeIgniter
- *
- * An open source application development framework for PHP 5.1.6 or newer
- *
- * @package		CodeIgniter
- * @copyright	Copyright (c) 2008 - 2011, EllisLab, Inc.
- * @license		http://codeigniter.com/user_guide/license.html
- * @author		EllisLab Dev Team
- * @link		http://codeigniter.com
- * @since		Version 2.1.2
- * @filesource
- */
-
-// ------------------------------------------------------------------------
+<?php
 
 /**
  * PDO Result Class
@@ -21,32 +6,41 @@
  * This class extends the parent result class: CI_DB_result
  *
  * @category	Database
- * @author		EllisLab Dev Team
- * @link		http://codeigniter.com/user_guide/database/
+ * @author		Dready
+ * @link			http://dready.jexiste.fr/dotclear/
  */
 class CI_DB_pdo_result extends CI_DB_result {
 
-	public $num_rows;
-
+	var $pdo_results = '';
+	var $pdo_index = 0;
 	/**
 	 * Number of rows in the result set
 	 *
-	 * @return	int
+	* pfff... that's ugly !!!!!!!
+	*
+	*PHP manual for PDO tell us about nom_rows :
+	* "For most databases, PDOStatement::rowCount() does not return the number of rows affected by
+	*a SELECT statement. Instead, use PDO::query() to issue a SELECT COUNT(*) statement with the
+	*same predicates as your intended SELECT statement, then use PDOStatement::fetchColumn() to
+	*retrieve the number of rows that will be returned.
+	*
+	* which means
+	* 1/ select count(*) as c from table where $where
+	* => numrows
+	* 2/ select * from table where $where
+	* => treatment
+	*
+	* Holy cow !
+	*
+	 * @access	public
+	 * @return	integer
 	 */
-	public function num_rows()
+	function num_rows()
 	{
-		if (is_int($this->num_rows))
-		{
-			return $this->num_rows;
+		if ( ! $this->pdo_results ) {
+			$this->pdo_results = $this->result_id->fetchAll(PDO::FETCH_ASSOC);
 		}
-		elseif (($this->num_rows = $this->result_id->rowCount()) > 0)
-		{
-			return $this->num_rows;
-		}
-
-		$this->num_rows = count($this->result_id->fetchAll());
-		$this->result_id->execute();
-		return $this->num_rows;
+		return sizeof($this->pdo_results);
 	}
 
 	// --------------------------------------------------------------------
@@ -59,26 +53,11 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 */
 	function num_fields()
 	{
-		return $this->result_id->columnCount();
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Fetch Field Names
-	 *
-	 * Generates an array of column names
-	 *
-	 * @access	public
-	 * @return	array
-	 */
-	function list_fields()
-	{
-		if ($this->db->db_debug)
-		{
-			return $this->db->display_error('db_unsuported_feature');
+		if ( is_array($this->pdo_results) ) {
+			return sizeof($this->pdo_results[$this->pdo_index]);
+		} else {
+			return $this->result_id->columnCount();
 		}
-		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -91,60 +70,31 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 * @access	public
 	 * @return	array
 	 */
-	function field_data()
-	{
-		$data = array();
-	
-		try
-		{
-			for($i = 0; $i < $this->num_fields(); $i++)
+	function field_data() {
+		//var_dump($this->pdo_results);
+		$r=$this->pdo_results;
+		if ( is_array($r) ) {
+			$retval = array();
+			$count=count($r);
+			for ($i = 0; $i < $count; $i++)
 			{
-				$data[] = $this->result_id->getColumnMeta($i);
+				$F 				= new stdClass();
+				$F->name 		= $r[$i]['name'];
+				$F->type 		= $r[$i]['type'];
+				$F->max_length	= 0;
+				$F->primary_key = $r[$i]['pk'];
+				$F->default		= $r[$i]['dflt_value'];
+
+				$retval[] = $F;
 			}
-			
-			return $data;
-		}
-		catch (Exception $e)
-		{
-			if ($this->db->db_debug)
-			{
-				return $this->db->display_error('db_unsuported_feature');
-			}
+
+			return $retval;
+
+		} else {
 			return FALSE;
 		}
 	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Free the result
-	 *
-	 * @return	null
-	 */
-	function free_result()
-	{
-		if (is_object($this->result_id))
-		{
-			$this->result_id = FALSE;
-		}
-	}
-
-	// --------------------------------------------------------------------
-
-	/**
-	 * Data Seek
-	 *
-	 * Moves the internal pointer to the desired offset.  We call
-	 * this internally before fetching results to make sure the
-	 * result set starts at zero
-	 *
-	 * @access	private
-	 * @return	array
-	 */
-	function _data_seek($n = 0)
-	{
-		return FALSE;
-	}
+	
 
 	// --------------------------------------------------------------------
 
@@ -158,6 +108,13 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 */
 	function _fetch_assoc()
 	{
+		if ( is_array($this->pdo_results) ) {
+			$i = $this->pdo_index;
+			$this->pdo_index++;
+			if ( isset($this->pdo_results[$i]))
+				return $this->pdo_results[$i];
+			return null;
+		}
 		return $this->result_id->fetch(PDO::FETCH_ASSOC);
 	}
 
@@ -172,12 +129,24 @@ class CI_DB_pdo_result extends CI_DB_result {
 	 * @return	object
 	 */
 	function _fetch_object()
-	{	
-		return $this->result_id->fetchObject();
+	{
+		if ( is_array($this->pdo_results) ) {
+			$i = $this->pdo_index;
+			$this->pdo_index++;
+			if ( isset($this->pdo_results[$i])) {
+				//$back = '';
+				$back = (object) array();
+				foreach ( $this->pdo_results[$i] as $key => $val ) {
+					$back->$key = $val;
+				}
+				return $back;
+			}
+			return null;
+		}
+		return $this->result_id->fetch(PDO::FETCH_OBJ);
 	}
 
 }
 
 
-/* End of file pdo_result.php */
-/* Location: ./system/database/drivers/pdo/pdo_result.php */
+?>

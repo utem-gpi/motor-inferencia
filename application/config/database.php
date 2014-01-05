@@ -48,11 +48,13 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+$db['default']['hostname'] = '';
 $db['default']['username'] = '';
 $db['default']['password'] = '';
-$db['default']['database'] = "./database.sqlite";
-$db['default']['dbdriver'] = 'sqlite';
+//echo getcwd();exit;
+//$db['default']['database'] = "sqlite:".getcwd()."/application/db/app.sqlite";
+$db['default']['database'] = "sqlite:/Users/Tríkira/Documents/GitHub/motor-inferencia/application/db/app.sqlite";
+$db['default']['dbdriver'] = 'pdo';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
 $db['default']['db_debug'] = TRUE;
@@ -62,7 +64,7 @@ $db['default']['char_set'] = 'utf8';
 $db['default']['dbcollat'] = 'utf8_spanish_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = TRUE;
+$db['default']['stricton'] = FALSE;
 
 
 /* End of file database.php */

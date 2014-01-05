@@ -840,6 +840,9 @@ class CI_DB_driver {
 			{
 				$retval[] = $row['COLUMN_NAME'];
 			}
+			else if ($this->platform()=="pdo") {
+				$retval[] = next($row);
+			}
 			else
 			{
 				$retval[] = current($row);

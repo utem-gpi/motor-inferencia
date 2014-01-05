@@ -1,11 +1,12 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
     <head>
+		<meta charset="utf-8">
         <title>Sistema de Selección de Personal</title>
     </head>
     <body>
         <h1>Perfiles</h1>
-        <form method="post" action="<?=base_url('perfiles/crear') ?>">
+        <form method="post" action="<?=site_url('perfiles/crear') ?>">
             <fieldset>
                 <legend>Ingresar nuevo perfil</legend>
                 <label>
@@ -24,12 +25,14 @@
                 </tr>
             </thead>
             <tbody>
+				<?php foreach($perfiles as $item): ?>
                 <tr>
-                    <td>asdf</td>
+                    <td><?=htmlspecialchars($item->nombre) ?></td>
                     <td>
-                        <a href="#">Modificar</a>
-                        <a href="#">Eliminar</a>
+                        <a href="<?=site_url('perfiles/descriptores/'.$item->id) ?>">Modificar</a>
+                        <a href="<?=site_url('perfiles/eliminar/'.$item->id) ?>" onclick="return confirm('¿Está seguro que desea eliminar el perfil?');">Eliminar</a>
                     </td>
                 </tr>
+				<?php endforeach ?>
             </tbody>
     </body>
