@@ -21,5 +21,9 @@ class Alternativa_model extends CI_Model {
 		$this->db->insert('alternativa', array_merge(array('id_pregunta' => $id), $data));
 		return $this->db->insert_id();
 	}
+
+	public function remove($id) {
+		$this->db->where('id', $id)->delete('alternativa');
+	}
 	
 }
