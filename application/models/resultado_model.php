@@ -91,7 +91,18 @@ EOT;
 	}
 	
 	public function getSummaryByPostulante($id) {
-		return $this->db->where('id_postulante', $id)->get('consolidado_resumen')->result()[0];
+		$resumen = $this->db->where('id_postulante', $id)->get('consolidado_resumen');
+		return ($resumen->num_rows() == 0)? null : $resumen->result()[0];
+	}
+	
+	public function getPostulantes() {
+		$postulantes = $this->db->get('postulante')->result();
+		foreach($postulantes as $item) {
+			$summary = $this->getSummaryByPostulante($item->id);
+			$item->match = ($summary)? $summary->match : null;
+			$item->perfil = $this->db->where('id', $item->id_perfil)->get('perfil')->result()[0];
+		}
+		return $postulantes;
 	}
 	
 }
