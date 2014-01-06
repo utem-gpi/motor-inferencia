@@ -48,7 +48,8 @@ class Alternativas extends CI_Controller {
 	public function eliminar($id) {
 		$this->load->model('pregunta_model');
 		$this->load->model('alternativa_model');
+		$id_alternativa = $this->pregunta_model->getByAlternativa($id)->id;
 		$this->alternativa_model->remove($id);
-		redirect('preguntas/alternativas/index/'.$this->pregunta_model->getByAlternativa($id)->id);
+		redirect('preguntas/alternativas/index/'.$id_alternativa);
 	}
 };
