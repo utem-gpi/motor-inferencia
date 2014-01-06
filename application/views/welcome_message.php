@@ -14,7 +14,7 @@
 				<li><a href="<?=site_url('perfiles') ?>">Definir perfiles de cargo</a></li>
 				<li><a href="<?=site_url('preguntas') ?>">Definir preguntas y alternativas</a></li>
 				<li><a href="<?=site_url('postulantes') ?>">Aplicar la encuesta a un postulante</a></li>
-				<li><a href="#">Ver resultados de encuestas</a></li>
+				<li><a href="<?=site_url('resultados') ?>">Ver resultados de encuestas</a></li>
 			</ul>
 		</nav>
     </body>
