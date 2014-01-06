@@ -31,8 +31,10 @@ class Parametro_model extends CI_Model {
 		$parametros = $this->db->get('parametro')->result();
 		foreach($parametros as $item) {
 			$descriptor = $this->db->where(array('id_alternativa' => $id, 'id_parametro' => $item->id))->get('descriptor_alternativa');
-			if ($descriptor->num_rows() == 1)
-				$item->descriptor = $descriptor->result()[0];
+			if ($descriptor->num_rows() == 1) {
+				$result = $descriptor->result();
+				$item->descriptor = $result[0];
+			}
 		}
 		return $parametros;
 	}

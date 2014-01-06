@@ -14,9 +14,6 @@ class Alternativa_model extends CI_Model {
 
 	public function getByPregunta($id) {
 		$alternativas = $this->db->where('id_pregunta', $id)->get('alternativa')->result();
-		foreach($alternativas as $item) {
-			//$item->rangos = $this->db->where('id_parametro', $item->id)->get('rango')->result();
-		}
 		return $alternativas;
 	}
 	

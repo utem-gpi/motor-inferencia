@@ -37,8 +37,6 @@ class Pregunta_model extends CI_Model {
     }
 	
 	public function remove($id) {
-		//$this->db->where('id_pregunta', $id)->delete('descriptor_postulante');
-		//$this->db->where('id_pregunta', $id)->delete('descriptor_alternativa');
 		$this->db->where('id_pregunta', $id)->delete('alternativa');
 		$this->db->where('id', $id)->delete('pregunta');
 	}
