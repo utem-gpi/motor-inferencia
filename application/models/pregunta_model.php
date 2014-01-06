@@ -19,6 +19,18 @@ class Pregunta_model extends CI_Model {
 		return $retval;
 	}
 	
+	public function getByPostulante($id) {
+		$preguntas = $this->db->get('pregunta')->result();
+		foreach($preguntas as $item) {
+			$item->alternativas = $this->db->where('id_pregunta', $item->id)->get('alternativa')->result();
+			foreach($item->alternativas as $jtem) {
+				$descriptor = $this->db->where(array('id_postulante' => $id, 'id_alternativa' => $jtem->id))->get('descriptor_postulante');
+				$jtem->checked = ($descriptor->num_rows() == 1);
+			}
+		}
+		return $preguntas;
+	}
+	
     public function set($data) {
         $this->db->insert('pregunta', $data);
         return $this->db->insert_id();
