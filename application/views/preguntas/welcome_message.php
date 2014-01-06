@@ -30,7 +30,7 @@
                     <td><?=htmlspecialchars($item->texto) ?></td>
                     <td>
                         <a href="<?=site_url('preguntas/alternativas/index/'.$item->id) ?>">Modificar</a>
-                        <a href="<?=site_url('preguntas/eliminar/'.$item->id) ?>" onclick="return confirm('¿Está seguro que desea eliminar la pregunta?');">Eliminar</a>
+                        <a href="<?=site_url('preguntas/welcome/eliminar/'.$item->id) ?>" onclick="return confirm('¿Está seguro que desea eliminar la pregunta?');">Eliminar</a>
                     </td>
                 </tr>
 				<?php endforeach ?>

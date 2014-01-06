@@ -18,8 +18,8 @@ class Welcome extends CI_Controller {
     }
 	
 	public function eliminar($id) {
-		$this->load->model('perfil_model');
-		$this->perfil_model->remove($id);
+		$this->load->model('pregunta_model');
+		$this->pregunta_model->remove($id);
 		redirect('preguntas');
 	}
 };
