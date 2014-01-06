@@ -26,6 +26,7 @@
 						<label>
 							<span> <?=htmlspecialchars($item->nombre) ?></span>
 							<input type="number" name="descriptor_alternativa[<?=$item->id ?>]" value="<?=(isset($item->descriptor))? (int) $item->descriptor->nivel : 0 ?>" min="-20" max="20" step="1" required>
+							<p><?=htmlspecialchars($item->descripcion) ?></p>
 						</label>
 						<br>
 					</label>
